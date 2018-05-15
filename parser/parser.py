@@ -4,6 +4,16 @@ import ply.yacc as yacc
 from lexer import tokens
 
 
+
+'''
+GRAMMAR OF THE LISP!
+
+Program	the start of input, an Operator, one or more Expression, and the end of input.
+Expression	: Number | '(' Operator Expression+ ')'.
+Operator :	'+' | '-' | '*' | '/'
+Number : -?[0-9]+
+'''
+
 #Parsing rules
 precedence = (
     ('left', 'PLUS', 'MINUS'),
@@ -14,51 +24,34 @@ precedence = (
 #dictionary of names
 names = {}
 
-def p_statement_assign(t):
-    'statement : id EQUAL expression'
-    names[t[1]] = t[3]
-
-def p_statement_expr(t):
-    'statement : expression'
-    print(t[1])
 
 
-def p_expression_binop(t):
-    '''expression : expression PLUS expression
-                  | expression MINUS expression
-                  | expression TIMES expression
-                  | expression DIVIDE expression '''
-    if t[2]   == '+': t[0] = t[1] + t[3]
-    elif t[2] == '-': t[0] = t[1] - t[3]
-    elif t[2] == '*': t[0] = t[1] * t[3]
-    elif t[2] == '/': t[0] = t[1] / t[3]
+def p_expr(t):
+    '''expression : LPAREN PLUS explist RPAREN
+                  | LPAREN MINUS explist RPAREN
+                  | LPAREN TIMES explist RPAREN
+                  | LPAREN DIVIDE explist RPAREN 
+                  '''
+    AST_local = []
+    t[0] = t[:]
 
 
-#ClassDeclaration 	::= 	"class" Identifier ( "extends" Identifier )? "{" ( VarDeclaration )* ( MethodDeclaration )* "}"
-def p_class_declaration(t):
-    'class_declaration : CLASS id'
-    #STOPPED HERE
-
-
-def p_expression_group(t):
-    'expression : LPAREN expression RPAREN'
-    t[0] = t[2]
+def p_expr_list(t):
+    ''' explist : expression
+                | explist expression
+    '''
+    if len(t) < 3:
+        t[0] = ('list', [t[1]])
+    else:
+        t[1][1].append(t[2])
+        t[0] = t[1]
 
 def p_expression_number(t):
     'expression : NUMBER'
     t[0] = t[1]
-
-
-def p_expression_name(t): 
-    'expression : id' 
-    try:
-        t[0] = names[t[1]] 
-    except LookupError:
-        print("Undefined name '%s'" % t[1])
-        t[0] = 0 
         
 def p_error(t):
-    print("Syntax error at '%s'" % t.value)
+    print("Syntax error at '%s'" % t)
 
 
 
@@ -66,25 +59,6 @@ parser_instance = yacc.yacc()
 
 
 if __name__ == '__main__':
-    
-    sample_program = """
-    class Factorial {
-        public static void main(String[] a){
-            System.out.println(new Fac().ComputeFac(10));
-        }
-    }
-
-    class Fac {
-        public int ComputeFac(int num){
-            in num_aux;
-            if (num < 1)
-                num_aux = 1;
-            else
-                num_aux = num * (this.ComputeFac(num-1));
-            return num_aux;
-        }
-    }
-    """
 
     while True:
         try:
@@ -94,9 +68,9 @@ if __name__ == '__main__':
 
         if not s: continue
 
-        if s == 'sample':
-            s = sample_program
-
         result = parser_instance.parse(s)
+
+        print(result)
+
 
 

@@ -10,38 +10,10 @@ tokens = [
    'DIVIDE',
    'LPAREN',
    'RPAREN',
-   'id',
-   'EQUAL',
-   'LBRACE',
-   'RBRACE',
-   'RBRACKET',
-   'LBRACKET',
-   'SEMI',
-   'DOT',
-   'BANG',
-   'LESS',
-   'GREATER'
 ]
 
 
 reserved = {
-    'if' : 'IF',
-    'boolean' : 'BOOLEAN',
-    'class' : 'CLASS',
-    'else' : 'ELSE',
-    'extends' : 'EXTENDS',
-    'false' : 'FALSE',
-    'true' : 'TRUE',
-    'int' : 'INT',
-    'main' : 'MAIN',
-    'new' : 'NEW',
-    'public' : 'PUBLIC',
-    'return' : 'RETURN',
-    'static' : 'STATIC',
-    'String' : 'STRING',
-    'this' : 'THIS',
-    'void' : 'VOID',
-    'while' : 'WHILE'
 }
 
 
@@ -54,25 +26,10 @@ t_PLUS = r'\+' #@TODO are these even part of the specification?
 t_MINUS = r'-'
 t_TIMES = r'\*'
 t_DIVIDE = r'/'
-t_EQUAL = r'='
-t_LESS = r'\<'
-t_GREATER = r'\>'
 
 #separators
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
-t_LBRACE = r'\{'
-t_RBRACE = r'\}'
-t_LBRACKET = r'\['
-t_RBRACKET = r'\]'
-t_SEMI = r'\;'
-t_DOT = r'\.'
-t_BANG = r'\!'
-
-def t_id(t):
-    r'[a-zA-Z_][a-zA-z0-9_]*'
-    t.type = reserved.get(t.value,'id') #check for reserved words
-    return t
 
 
 def t_NUMBER(t):
