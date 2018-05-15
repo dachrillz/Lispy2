@@ -1,7 +1,4 @@
-import sys
-sys.path.insert(0, 'ply-3.11') #path to the lexer library
-
-import lex as lex
+import ply.lex as lex
 
 
 #Define tokens
@@ -102,6 +99,7 @@ def t_error(t):
 
 
 lexer_instance = lex.lex()
+
 
 if __name__ == '__main__':
     
