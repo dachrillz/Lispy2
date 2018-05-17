@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDEDIVIDE LPAREN MINUS NUMBER PLUS RPAREN TIMESexpression : LPAREN PLUS explist RPAREN\n                  | LPAREN MINUS explist RPAREN\n                  | LPAREN TIMES explist RPAREN\n                  | LPAREN DIVIDE explist RPAREN \n                   explist : expression\n                | explist expression\n    expression : NUMBER'
+_lr_signature = 'LPAREN NUMBER RPAREN SYMBOLexpression : LPAREN explist RPAREN\n                   explist : expression\n                | explist expression\n    expression : NUMBERexpression : SYMBOL'
     
-_lr_action_items = {'NUMBER':([0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,],[3,-7,3,3,3,3,-5,3,3,3,3,-6,-1,-2,-4,-3,]),'$end':([1,3,14,15,16,17,],[0,-7,-1,-2,-4,-3,]),'LPAREN':([0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,],[2,-7,2,2,2,2,-5,2,2,2,2,-6,-1,-2,-4,-3,]),'MINUS':([2,],[5,]),'RPAREN':([3,8,9,10,11,12,13,14,15,16,17,],[-7,-5,14,15,16,17,-6,-1,-2,-4,-3,]),'DIVIDE':([2,],[6,]),'PLUS':([2,],[4,]),'TIMES':([2,],[7,]),}
+_lr_action_items = {'NUMBER':([0,2,3,4,5,6,7,8,],[3,3,-4,-5,-2,3,-3,-1,]),'RPAREN':([3,4,5,6,7,8,],[-4,-5,-2,8,-3,-1,]),'$end':([1,3,4,8,],[0,-4,-5,-1,]),'LPAREN':([0,2,3,4,5,6,7,8,],[2,2,-4,-5,-2,2,-3,-1,]),'SYMBOL':([0,2,3,4,5,6,7,8,],[4,4,-4,-5,-2,4,-3,-1,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,4,5,6,7,9,10,11,12,],[1,8,8,8,8,13,13,13,13,]),'explist':([4,5,6,7,],[9,10,11,12,]),}
+_lr_goto_items = {'expression':([0,2,6,],[1,5,7,]),'explist':([2,],[6,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,11 +27,9 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> LPAREN PLUS explist RPAREN','expression',4,'p_expr','parser.py',30),
-  ('expression -> LPAREN MINUS explist RPAREN','expression',4,'p_expr','parser.py',31),
-  ('expression -> LPAREN TIMES explist RPAREN','expression',4,'p_expr','parser.py',32),
-  ('expression -> LPAREN DIVIDE explist RPAREN','expression',4,'p_expr','parser.py',33),
-  ('explist -> expression','explist',1,'p_expr_list','parser.py',43),
-  ('explist -> explist expression','explist',2,'p_expr_list','parser.py',44),
-  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',53),
+  ('expression -> LPAREN explist RPAREN','expression',3,'p_expr','parser.py',67),
+  ('explist -> expression','explist',1,'p_expr_list','parser.py',76),
+  ('explist -> explist expression','explist',2,'p_expr_list','parser.py',77),
+  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',86),
+  ('expression -> SYMBOL','expression',1,'p_expression_symbol','parser.py',90),
 ]

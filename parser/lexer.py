@@ -4,12 +4,9 @@ import ply.lex as lex
 #Define tokens
 tokens = [
    'NUMBER',
-   'PLUS',
-   'MINUS',
-   'TIMES',
-   'DIVIDE',
    'LPAREN',
    'RPAREN',
+    'SYMBOL'
 ]
 
 
@@ -20,17 +17,13 @@ reserved = {
 tokens += reserved.values()
 
 #specify the tokens
-
-#operators
-t_PLUS = r'\+' #@TODO are these even part of the specification?
-t_MINUS = r'-'
-t_TIMES = r'\*'
-t_DIVIDE = r'/'
-
 #separators
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 
+def t_SYMBOL(t):
+    r'[^0-9()][^()\ \t\n]*'
+    return t
 
 def t_NUMBER(t):
     r'\d+' 

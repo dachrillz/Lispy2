@@ -1,5 +1,8 @@
 #import lexer
 import ply.yacc as yacc
+import operator
+from functools import reduce #python 3
+import collections
 
 from lexer import tokens
 
@@ -12,31 +15,64 @@ Program	the start of input, an Operator, one or more Expression, and the end of 
 Expression	: Number | '(' Operator Expression+ ')'.
 Operator :	'+' | '-' | '*' | '/'
 Number : -?[0-9]+
+Symbol:  [^0-9()][^()\ \t\n]*'
 '''
-
-#Parsing rules
-precedence = (
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE')
-)
 
 
 #dictionary of names
 names = {}
 
+def flatten(l):
+    if isinstance(l, collections.Iterable):
+        return [a for i in l for a in flatten(i)]
+    else:
+        return [l]
 
 
-def p_expr(t):
-    '''expression : LPAREN PLUS explist RPAREN
-                  | LPAREN MINUS explist RPAREN
-                  | LPAREN TIMES explist RPAREN
-                  | LPAREN DIVIDE explist RPAREN 
+def AST_builder(t):
+    stringToParse = collections.deque(t)
+    paren_memory = False
+    AST_as_list = []
+
+    
+    while len(stringToParse) != 0:
+        item = stringToParse.popleft()
+
+        print(item)
+        input()
+
+        if item == '(':
+            if paren_memory:
+                AST_as_list.append(AST_builder(stringToParse))
+
+            paren_memory = True
+
+        elif item == ')' and paren_memory:
+            paren_memory = False
+            return AST_as_list
+
+        elif type(item) == str:
+            AST_as_list.append(item)
+        elif type(item) == int:
+            AST_as_list.append(item)
+    
+        elif type(item) == list:
+            AST_as_list.append(item)
+        
+
+    return AST_as_list
+        
+
+def p_expr(t): #expression as list!
+    '''expression : LPAREN explist RPAREN
                   '''
-    AST_local = []
-    t[0] = t[:]
+    if t[2] == None:
+        t[0] = ('list', [])
+    else:
+        t[0] = t[2]
 
 
-def p_expr_list(t):
+def p_expr_list(t): #This is the renowned S-expression
     ''' explist : expression
                 | explist expression
     '''
@@ -48,15 +84,21 @@ def p_expr_list(t):
 
 def p_expression_number(t):
     'expression : NUMBER'
-    t[0] = t[1]
+    t[0] = ('int', t[1])
+
+def p_expression_symbol(t):
+    'expression : SYMBOL'
+    t[0] = ('sym',t[1])
         
 def p_error(t):
     print("Syntax error at '%s'" % t)
 
 
 
-parser_instance = yacc.yacc()
 
+
+
+parser_instance = yacc.yacc()
 
 if __name__ == '__main__':
 
@@ -71,6 +113,5 @@ if __name__ == '__main__':
         result = parser_instance.parse(s)
 
         print(result)
-
 
 
