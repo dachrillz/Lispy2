@@ -20,48 +20,7 @@ Symbol:  [^0-9()][^()\ \t\n]*'
 
 
 #dictionary of names
-names = {}
-
-def flatten(l):
-    if isinstance(l, collections.Iterable):
-        return [a for i in l for a in flatten(i)]
-    else:
-        return [l]
-
-
-def AST_builder(t):
-    stringToParse = collections.deque(t)
-    paren_memory = False
-    AST_as_list = []
-
-    
-    while len(stringToParse) != 0:
-        item = stringToParse.popleft()
-
-        print(item)
-        input()
-
-        if item == '(':
-            if paren_memory:
-                AST_as_list.append(AST_builder(stringToParse))
-
-            paren_memory = True
-
-        elif item == ')' and paren_memory:
-            paren_memory = False
-            return AST_as_list
-
-        elif type(item) == str:
-            AST_as_list.append(item)
-        elif type(item) == int:
-            AST_as_list.append(item)
-    
-        elif type(item) == list:
-            AST_as_list.append(item)
-        
-
-    return AST_as_list
-        
+names = {}  
 
 def p_expr(t): #expression as list!
     '''expression : LPAREN explist RPAREN
@@ -92,10 +51,6 @@ def p_expression_symbol(t):
         
 def p_error(t):
     print("Syntax error at '%s'" % t)
-
-
-
-
 
 
 parser_instance = yacc.yacc()
