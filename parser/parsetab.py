@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'LPAREN NUMBER RPAREN SYMBOLexpression : LPAREN explist RPAREN\n                   explist : expression\n                | explist expression\n    expression : NUMBERexpression : SYMBOL'
+_lr_signature = 'LPAREN NUMBER RPAREN SYMBOLexpression : LPAREN explist RPAREN\n                   explist : expression\n                | explist expression\n    expression : NUMBERexpression : SYMBOLexpression : LPAREN RPAREN'
     
-_lr_action_items = {'NUMBER':([0,2,3,4,5,6,7,8,],[3,3,-4,-5,-2,3,-3,-1,]),'RPAREN':([3,4,5,6,7,8,],[-4,-5,-2,8,-3,-1,]),'$end':([1,3,4,8,],[0,-4,-5,-1,]),'LPAREN':([0,2,3,4,5,6,7,8,],[2,2,-4,-5,-2,2,-3,-1,]),'SYMBOL':([0,2,3,4,5,6,7,8,],[4,4,-4,-5,-2,4,-3,-1,]),}
+_lr_action_items = {'SYMBOL':([0,1,2,3,5,6,7,8,9,],[2,-4,-5,2,2,-2,-6,-3,-1,]),'LPAREN':([0,1,2,3,5,6,7,8,9,],[3,-4,-5,3,3,-2,-6,-3,-1,]),'RPAREN':([1,2,3,5,6,7,8,9,],[-4,-5,7,9,-2,-6,-3,-1,]),'$end':([1,2,4,7,9,],[-4,-5,0,-6,-1,]),'NUMBER':([0,1,2,3,5,6,7,8,9,],[1,-4,-5,1,1,-2,-6,-3,-1,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,2,6,],[1,5,7,]),'explist':([2,],[6,]),}
+_lr_goto_items = {'expression':([0,3,5,],[4,6,8,]),'explist':([3,],[5,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,9 +27,10 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> LPAREN explist RPAREN','expression',3,'p_expr','parser.py',67),
-  ('explist -> expression','explist',1,'p_expr_list','parser.py',76),
-  ('explist -> explist expression','explist',2,'p_expr_list','parser.py',77),
-  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',86),
-  ('expression -> SYMBOL','expression',1,'p_expression_symbol','parser.py',90),
+  ('expression -> LPAREN explist RPAREN','expression',3,'p_expr','parser.py',26),
+  ('explist -> expression','explist',1,'p_expr_list','parser.py',35),
+  ('explist -> explist expression','explist',2,'p_expr_list','parser.py',36),
+  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',45),
+  ('expression -> SYMBOL','expression',1,'p_expression_symbol','parser.py',49),
+  ('expression -> LPAREN RPAREN','expression',2,'p_empty_paren','parser.py',54),
 ]

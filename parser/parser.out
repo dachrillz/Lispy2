@@ -8,12 +8,13 @@ Rule 2     explist -> expression
 Rule 3     explist -> explist expression
 Rule 4     expression -> NUMBER
 Rule 5     expression -> SYMBOL
+Rule 6     expression -> LPAREN RPAREN
 
 Terminals, with rules where they appear
 
-LPAREN               : 1
+LPAREN               : 1 6
 NUMBER               : 4
-RPAREN               : 1
+RPAREN               : 1 6
 SYMBOL               : 5
 error                : 
 
@@ -30,58 +31,78 @@ state 0
     (1) expression -> . LPAREN explist RPAREN
     (4) expression -> . NUMBER
     (5) expression -> . SYMBOL
+    (6) expression -> . LPAREN RPAREN
 
-    LPAREN          shift and go to state 2
-    NUMBER          shift and go to state 3
-    SYMBOL          shift and go to state 4
+    LPAREN          shift and go to state 3
+    NUMBER          shift and go to state 1
+    SYMBOL          shift and go to state 2
 
-    expression                     shift and go to state 1
+    expression                     shift and go to state 4
 
 state 1
 
-    (0) S' -> expression .
+    (4) expression -> NUMBER .
 
+    RPAREN          reduce using rule 4 (expression -> NUMBER .)
+    LPAREN          reduce using rule 4 (expression -> NUMBER .)
+    NUMBER          reduce using rule 4 (expression -> NUMBER .)
+    SYMBOL          reduce using rule 4 (expression -> NUMBER .)
+    $end            reduce using rule 4 (expression -> NUMBER .)
 
 
 state 2
 
+    (5) expression -> SYMBOL .
+
+    RPAREN          reduce using rule 5 (expression -> SYMBOL .)
+    LPAREN          reduce using rule 5 (expression -> SYMBOL .)
+    NUMBER          reduce using rule 5 (expression -> SYMBOL .)
+    SYMBOL          reduce using rule 5 (expression -> SYMBOL .)
+    $end            reduce using rule 5 (expression -> SYMBOL .)
+
+
+state 3
+
     (1) expression -> LPAREN . explist RPAREN
+    (6) expression -> LPAREN . RPAREN
     (2) explist -> . expression
     (3) explist -> . explist expression
     (1) expression -> . LPAREN explist RPAREN
     (4) expression -> . NUMBER
     (5) expression -> . SYMBOL
+    (6) expression -> . LPAREN RPAREN
 
-    LPAREN          shift and go to state 2
-    NUMBER          shift and go to state 3
-    SYMBOL          shift and go to state 4
+    RPAREN          shift and go to state 7
+    LPAREN          shift and go to state 3
+    NUMBER          shift and go to state 1
+    SYMBOL          shift and go to state 2
 
-    expression                     shift and go to state 5
-    explist                        shift and go to state 6
-
-state 3
-
-    (4) expression -> NUMBER .
-
-    $end            reduce using rule 4 (expression -> NUMBER .)
-    RPAREN          reduce using rule 4 (expression -> NUMBER .)
-    LPAREN          reduce using rule 4 (expression -> NUMBER .)
-    NUMBER          reduce using rule 4 (expression -> NUMBER .)
-    SYMBOL          reduce using rule 4 (expression -> NUMBER .)
-
+    explist                        shift and go to state 5
+    expression                     shift and go to state 6
 
 state 4
 
-    (5) expression -> SYMBOL .
+    (0) S' -> expression .
 
-    $end            reduce using rule 5 (expression -> SYMBOL .)
-    RPAREN          reduce using rule 5 (expression -> SYMBOL .)
-    LPAREN          reduce using rule 5 (expression -> SYMBOL .)
-    NUMBER          reduce using rule 5 (expression -> SYMBOL .)
-    SYMBOL          reduce using rule 5 (expression -> SYMBOL .)
 
 
 state 5
+
+    (1) expression -> LPAREN explist . RPAREN
+    (3) explist -> explist . expression
+    (1) expression -> . LPAREN explist RPAREN
+    (4) expression -> . NUMBER
+    (5) expression -> . SYMBOL
+    (6) expression -> . LPAREN RPAREN
+
+    RPAREN          shift and go to state 9
+    LPAREN          shift and go to state 3
+    NUMBER          shift and go to state 1
+    SYMBOL          shift and go to state 2
+
+    expression                     shift and go to state 8
+
+state 6
 
     (2) explist -> expression .
 
@@ -91,22 +112,18 @@ state 5
     SYMBOL          reduce using rule 2 (explist -> expression .)
 
 
-state 6
-
-    (1) expression -> LPAREN explist . RPAREN
-    (3) explist -> explist . expression
-    (1) expression -> . LPAREN explist RPAREN
-    (4) expression -> . NUMBER
-    (5) expression -> . SYMBOL
-
-    RPAREN          shift and go to state 8
-    LPAREN          shift and go to state 2
-    NUMBER          shift and go to state 3
-    SYMBOL          shift and go to state 4
-
-    expression                     shift and go to state 7
-
 state 7
+
+    (6) expression -> LPAREN RPAREN .
+
+    RPAREN          reduce using rule 6 (expression -> LPAREN RPAREN .)
+    LPAREN          reduce using rule 6 (expression -> LPAREN RPAREN .)
+    NUMBER          reduce using rule 6 (expression -> LPAREN RPAREN .)
+    SYMBOL          reduce using rule 6 (expression -> LPAREN RPAREN .)
+    $end            reduce using rule 6 (expression -> LPAREN RPAREN .)
+
+
+state 8
 
     (3) explist -> explist expression .
 
@@ -116,13 +133,13 @@ state 7
     SYMBOL          reduce using rule 3 (explist -> explist expression .)
 
 
-state 8
+state 9
 
     (1) expression -> LPAREN explist RPAREN .
 
-    $end            reduce using rule 1 (expression -> LPAREN explist RPAREN .)
     RPAREN          reduce using rule 1 (expression -> LPAREN explist RPAREN .)
     LPAREN          reduce using rule 1 (expression -> LPAREN explist RPAREN .)
     NUMBER          reduce using rule 1 (expression -> LPAREN explist RPAREN .)
     SYMBOL          reduce using rule 1 (expression -> LPAREN explist RPAREN .)
+    $end            reduce using rule 1 (expression -> LPAREN explist RPAREN .)
 

@@ -48,6 +48,11 @@ def p_expression_number(t):
 def p_expression_symbol(t):
     'expression : SYMBOL'
     t[0] = ('sym',t[1])
+
+
+def p_empty_paren(t):
+    'expression : LPAREN RPAREN'
+    t[0] = ('list', '()')
         
 def p_error(t):
     print("Syntax error at '%s'" % t)
