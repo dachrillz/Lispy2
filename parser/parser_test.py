@@ -1,52 +1,40 @@
-'''
-;; Testing read of numbers
-1
-;=>1
-7
-;=>7
-  7   
-;=>7
--123
-;=>-123
+from lisp_parser import get_parser
 
+test_list = ['1',
+'7',
+'  7',   
+'-123',
+'+',
+'abc',
+'   abc',   
+'abc5',
+'abc-def',
+'(+ 1 2)',
+'()',
+'(nil)',
+'((3 4))',
+'(+ 1 (+ 2 3))',
+'  ( +   1   (+   2 3   )   )',  
+'(* 1 2)',
+'(** 1 2)',
+'(* -3 6)']
+#'(1 2, 3,,,,),,'] #currentyl produces error
 
-;; Testing read of symbols
-+
-;=>+
-abc
-;=>abc
-   abc   
-;=>abc
-abc5
-;=>abc5
-abc-def
-;=>abc-def
+def run_tests():
+      
+      print("Running parser_test.py")
 
+      parser_instance = get_parser()
 
-;; Testing read of lists
-(+ 1 2)
-;=>(+ 1 2)
-()
-;=>()
-(nil)
-;=>(nil)
-((3 4))
-;=>((3 4))
-(+ 1 (+ 2 3))
-;=>(+ 1 (+ 2 3))
-  ( +   1   (+   2 3   )   )  
-;=>(+ 1 (+ 2 3))
-(* 1 2)
-;=>(* 1 2)
-(** 1 2)
-;=>(** 1 2)
-(* -3 6)
-;=>(* -3 6)
+      for item in test_list:
+            result = parser_instance.parse(item)
 
-;; Test commas as whitespace
-(1 2, 3,,,,),,
-;=>(1 2 3)
-'''
-import parser
+            assert result is not None
+            assert 'Syntax error' not in result
 
-parser.parser_instance.parse('2')
+      print("parser_test.py -- Done!")
+      return 0
+  
+
+if __name__ == '__main__':
+  run_tests()

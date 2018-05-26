@@ -34,20 +34,15 @@ state 0
     (6) expression -> . LPAREN RPAREN
 
     LPAREN          shift and go to state 3
-    NUMBER          shift and go to state 1
+    NUMBER          shift and go to state 4
     SYMBOL          shift and go to state 2
 
-    expression                     shift and go to state 4
+    expression                     shift and go to state 1
 
 state 1
 
-    (4) expression -> NUMBER .
+    (0) S' -> expression .
 
-    RPAREN          reduce using rule 4 (expression -> NUMBER .)
-    LPAREN          reduce using rule 4 (expression -> NUMBER .)
-    NUMBER          reduce using rule 4 (expression -> NUMBER .)
-    SYMBOL          reduce using rule 4 (expression -> NUMBER .)
-    $end            reduce using rule 4 (expression -> NUMBER .)
 
 
 state 2
@@ -74,19 +69,34 @@ state 3
 
     RPAREN          shift and go to state 7
     LPAREN          shift and go to state 3
-    NUMBER          shift and go to state 1
+    NUMBER          shift and go to state 4
     SYMBOL          shift and go to state 2
 
-    explist                        shift and go to state 5
-    expression                     shift and go to state 6
+    explist                        shift and go to state 6
+    expression                     shift and go to state 5
 
 state 4
 
-    (0) S' -> expression .
+    (4) expression -> NUMBER .
 
+    RPAREN          reduce using rule 4 (expression -> NUMBER .)
+    LPAREN          reduce using rule 4 (expression -> NUMBER .)
+    NUMBER          reduce using rule 4 (expression -> NUMBER .)
+    SYMBOL          reduce using rule 4 (expression -> NUMBER .)
+    $end            reduce using rule 4 (expression -> NUMBER .)
 
 
 state 5
+
+    (2) explist -> expression .
+
+    RPAREN          reduce using rule 2 (explist -> expression .)
+    LPAREN          reduce using rule 2 (explist -> expression .)
+    NUMBER          reduce using rule 2 (explist -> expression .)
+    SYMBOL          reduce using rule 2 (explist -> expression .)
+
+
+state 6
 
     (1) expression -> LPAREN explist . RPAREN
     (3) explist -> explist . expression
@@ -97,20 +107,10 @@ state 5
 
     RPAREN          shift and go to state 9
     LPAREN          shift and go to state 3
-    NUMBER          shift and go to state 1
+    NUMBER          shift and go to state 4
     SYMBOL          shift and go to state 2
 
     expression                     shift and go to state 8
-
-state 6
-
-    (2) explist -> expression .
-
-    RPAREN          reduce using rule 2 (explist -> expression .)
-    LPAREN          reduce using rule 2 (explist -> expression .)
-    NUMBER          reduce using rule 2 (explist -> expression .)
-    SYMBOL          reduce using rule 2 (explist -> expression .)
-
 
 state 7
 

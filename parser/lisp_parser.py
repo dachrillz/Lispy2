@@ -55,12 +55,18 @@ def p_empty_paren(t):
     t[0] = ('list', '()')
         
 def p_error(t):
-    print("Syntax error at '%s'" % t)
+    if t is None:
+        print("Syntax error at '%s'" % t)
+    else:
+        print("Syntax error at '%s'" % t.value)
+        yacc.errok()
 
 
-parser_instance = yacc.yacc()
+def get_parser():
+    return yacc.yacc() 
 
 if __name__ == '__main__':
+    parser_instance = yacc.yacc()
 
     while True:
         try:

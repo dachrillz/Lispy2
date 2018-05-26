@@ -21,17 +21,17 @@ tokens += reserved.values()
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 
-def t_SYMBOL(t):
-    r'[^0-9()][^()\ \t\n]*'
-    return t
-
 def t_NUMBER(t):
-    r'\d+' 
+    r'[-]?\d+' 
     try:
         t.value = int(t.value) 
     except ValueError:
         print("Integer value too large %d", t.value) #handle overflow here
         t.value = 0 
+    return t
+
+def t_SYMBOL(t):
+    r'[^0-9()][^()\ \t\n]*'
     return t
 
 #ignored characters

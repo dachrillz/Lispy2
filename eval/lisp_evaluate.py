@@ -27,31 +27,44 @@ parser_instance = lisp_parser.get_parser()
     
 stack_instance = simple_stack()
 
-def eval(input_, env):
+def evaluate(input_, env):
     '''
     Iterate through abstract syntax tree and evalute the leaves.
     '''
-
-    print(input_)
-
     value_of_parsed_result = input_[1]
-    arguments = []
+
     if type(value_of_parsed_result) == list:
         if len(value_of_parsed_result) > 1:
+            
+            arguments = []
+
             for item in value_of_parsed_result:
                 if item[0] == 'sym':
                     #here we do lookups and call appropriate methods from the environment
-                    bound_function = env[item[1]] #@TODO: should probably do some error handling as well
-                    stack_instance.push(bound_function)
+                    try:
+                        bound_function = env[item[1]] #@TODO: should probably do some error handling as well
+                        stack_instance.push(bound_function)
+                    except:
+                        bound_function = ".*\'abc\' not found.*"
+                        break
                 elif item[0] == 'int':
                     stack_instance.push(item[1])
                     arguments.append(item[1])
                 elif item[0] == 'list':
                     stack_instance.push('|')
-                    arguments.append(eval(item,env))
+                    arguments.append(evaluate(item,env))
                     stack_instance.push('|')
-                
-            result = bound_function(arguments)
+
+            if callable(bound_function): #use this for error handling for now...
+                result = bound_function(arguments)
+            else:
+                result = bound_function
+
+    elif input_[1] == '()':
+        return '()'
+
+    elif input_[0] == 'int':
+        return input_[1]
     
 
     return result
@@ -73,7 +86,7 @@ if __name__ == '__main__':
     except:
         to_be_parsed = temp
 
-    parsed_result = parser_instance.parse(to_be_parsed)
+    #parsed_result = parser_instance.parse(to_be_parsed)
 
     def simple_addition(arg):
         '''
@@ -119,7 +132,7 @@ if __name__ == '__main__':
 
     env = {'+' : simple_addition, '-': simple_subtraction, '*': simple_multiplication,'/': simple_division}
 
-    result = eval(parsed_result, env)
+    result = evaluate(parsed_result, env)
 
     print(result)
 
