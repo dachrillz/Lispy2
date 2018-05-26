@@ -1,32 +1,7 @@
-
 import sys
 sys.path.append('../parser')
 import lisp_parser
-from collections import deque
-
-class simple_stack():
-    def __init__(self):
-        self.stack = deque()
-
-
-    def push(self, item):
-        self.stack.append(item)
-
-    def pop(self):
-        return self.stack.popleft()
-
-    def __repr__(self):
-        return ("repr of stack: " + str(self.stack))
-
-    def is_not_empty(self):
-        return len(self.stack) != 0
-
-
-
-parser_instance = lisp_parser.get_parser()
     
-stack_instance = simple_stack()
-
 def evaluate(input_, env):
     '''
     Iterate through abstract syntax tree and evalute the leaves.
@@ -43,17 +18,14 @@ def evaluate(input_, env):
                     #here we do lookups and call appropriate methods from the environment
                     try:
                         bound_function = env[item[1]] #@TODO: should probably do some error handling as well
-                        stack_instance.push(bound_function)
                     except:
                         bound_function = ".*\'abc\' not found.*"
                         break
+
                 elif item[0] == 'int':
-                    stack_instance.push(item[1])
                     arguments.append(item[1])
                 elif item[0] == 'list':
-                    stack_instance.push('|')
                     arguments.append(evaluate(item,env))
-                    stack_instance.push('|')
 
             if callable(bound_function): #use this for error handling for now...
                 result = bound_function(arguments)
@@ -65,7 +37,6 @@ def evaluate(input_, env):
 
     elif input_[0] == 'int':
         return input_[1]
-    
 
     return result
 
@@ -73,6 +44,7 @@ def evaluate(input_, env):
 
 
 if __name__ == '__main__':
+    parser_instance = lisp_parser.get_parser()
     #to_be_parsed = input("Type something to evalute >> ")
     to_be_parsed = '(+ (+ 1 2) 3)'
     #to_be_parsed = '(+ 2 3)'
@@ -86,7 +58,8 @@ if __name__ == '__main__':
     except:
         to_be_parsed = temp
 
-    #parsed_result = parser_instance.parse(to_be_parsed)
+    parsed_result = parser_instance.parse(to_be_parsed)
+
 
     def simple_addition(arg):
         '''
@@ -118,7 +91,6 @@ if __name__ == '__main__':
             result *= item
         return result
 
-
     
     def simple_division(arg):
         '''
@@ -133,12 +105,4 @@ if __name__ == '__main__':
     env = {'+' : simple_addition, '-': simple_subtraction, '*': simple_multiplication,'/': simple_division}
 
     result = evaluate(parsed_result, env)
-
     print(result)
-
-'''
-    while stack_instance.is_not_empty():
-        res = stack_instance.pop()
-        if res == '|':
-            
-            print(res)'''
