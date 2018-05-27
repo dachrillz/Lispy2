@@ -1,6 +1,8 @@
 import sys
 sys.path.append('../parser')
+sys.path.append('../environment')
 import lisp_parser
+import lisp_environment
     
 def evaluate(input_, env):
     '''
@@ -9,34 +11,43 @@ def evaluate(input_, env):
     value_of_parsed_result = input_[1]
 
     if type(value_of_parsed_result) == list:
-        if len(value_of_parsed_result) > 1:
-            
-            arguments = []
+        arguments = []
 
-            for item in value_of_parsed_result:
-                if item[0] == 'sym':
-                    #here we do lookups and call appropriate methods from the environment
+        for item in value_of_parsed_result:
+            if item[0] == 'sym':
+                #here we do lookups and call appropriate methods from the environment
+                if item[1] == 'def!':
+                    symbol_to_be_bound = value_of_parsed_result[1][1]
+                    to_be_evaluated = value_of_parsed_result[2:][0]
+                    env[symbol_to_be_bound] = evaluate(to_be_evaluated,env)
+                else:
                     try:
-                        bound_function = env[item[1]] #@TODO: should probably do some error handling as well
+                        bound_function = env[item[1]]
                     except:
-                        bound_function = ".*\'abc\' not found.*"
+                        bound_function = ".*\'%s\' not found.*" %str(item[1])
                         break
 
-                elif item[0] == 'int':
-                    arguments.append(item[1])
-                elif item[0] == 'list':
-                    arguments.append(evaluate(item,env))
+            elif item[0] == 'int':
+                arguments.append(item[1])
+            elif item[0] == 'list':
+                arguments.append(evaluate(item,env))
 
-            if callable(bound_function): #use this for error handling for now...
-                result = bound_function(arguments)
-            else:
-                result = bound_function
+        if callable(bound_function): #use this for error handling for now...
+            result = bound_function(arguments)
+        else:
+            result = bound_function
 
     elif input_[1] == '()':
         return '()'
 
     elif input_[0] == 'int':
         return input_[1]
+
+    elif input_[0] == 'sym':
+        try:
+            result = env[input_[1]]
+        except:
+            result = ".*\'%s\' not found.*" %str(input_[1])   
 
     return result
 
@@ -49,6 +60,8 @@ if __name__ == '__main__':
     to_be_parsed = '(+ (+ 1 2) 3)'
     #to_be_parsed = '(+ 2 3)'
     to_be_parsed = "(/ (- (+ 515 (* -87 311)) 296) 27)"
+    to_be_parsed = "(def! x 3)"
+    to_be_parsed = "(def! x (+ 3 2))"
     #to_be_parsed = "(- (+ 515 (* 87 311)) 296)"
     #to_be_parsed = '(* 87 311)'
     #to_be_parsed = '(- (+ 515 (* 87 311) 296) 1)'
@@ -60,49 +73,14 @@ if __name__ == '__main__':
 
     parsed_result = parser_instance.parse(to_be_parsed)
 
-
-    def simple_addition(arg):
-        '''
-        @TODO: think about rewriting this using function closures instead
-        '''
-        result = 0
-        for item in arg:
-            result += item
-        return result
-
-
-    def simple_subtraction(arg):
-        '''
-        @TODO: think about rewriting this using function closures instead
-        '''
-        result = arg[0]
-        for i in range(1, len(arg)):
-            result -= arg[i]
-        return result
-
-
-    
-    def simple_multiplication(arg):
-        '''
-        @TODO: think about rewriting this using function closures instead
-        '''
-        result = 1
-        for item in arg:
-            result *= item
-        return result
-
-    
-    def simple_division(arg):
-        '''
-        @TODO: think about rewriting this using function closures instead
-        '''
-        result = arg[0]
-        for i in range(1, len(arg)):
-            result /= arg[i]
-        return result
-
-
-    env = {'+' : simple_addition, '-': simple_subtraction, '*': simple_multiplication,'/': simple_division}
+    env = lisp_environment.get_environment()
 
     result = evaluate(parsed_result, env)
+    print(result)
+
+    to_be_parsed = 'x'
+    parsed_result = parser_instance.parse(to_be_parsed)
+
+    result = evaluate(parsed_result,env)
+
     print(result)
