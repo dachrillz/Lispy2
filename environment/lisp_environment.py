@@ -21,8 +21,6 @@ def simple_subtraction(arg):
         result -= arg[i]
     return result
 
-
-
 def simple_multiplication(arg):
     '''
     @TODO: think about rewriting this using function closures instead
@@ -44,10 +42,14 @@ def simple_division(arg):
 
 
 def define_(name, to_be_bound):
+    '''
+    Can be removed, since this is done in the evaluate module...
+    '''
     environment_as_dict[name] = to_be_bound
 
 
-environment_as_dict = {'def!': define_, '+' : simple_addition, '-': simple_subtraction, '*': simple_multiplication,'/': simple_division}
+#Note: outer is a reference to outer environments, in the global environment, this is None
+environment_as_dict = {'outer': None,'def!': define_, '+' : simple_addition, '-': simple_subtraction, '*': simple_multiplication,'/': simple_division}
 
 def get_environment():
     return environment_as_dict
